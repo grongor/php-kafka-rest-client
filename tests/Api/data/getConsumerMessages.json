@@ -1,0 +1,16 @@
+[
+    {
+        "topic": "lorem-ipsum",
+        "key": null,
+        "value": "bXNnMQ==",
+        "partition": 0,
+        "offset": 52
+    },
+    {
+        "topic": "lorem-ipsum",
+        "key": "c29tZSBrZXk=",
+        "value": "bXNnMg==",
+        "partition": 1,
+        "offset": 53
+    }
+]

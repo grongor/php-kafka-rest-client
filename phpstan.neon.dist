@@ -1,0 +1,6 @@
+parameters:
+    memory-limit: -1
+    level: max
+    paths:
+        - %currentWorkingDirectory%/src
+        - %currentWorkingDirectory%/tests

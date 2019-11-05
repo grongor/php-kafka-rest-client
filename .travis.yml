@@ -1,0 +1,44 @@
+language: php
+php:
+    - 7.2
+    - 7.3
+    - 7.4snapshot
+    - nightly
+
+env:
+    - DEPENDENCIES=
+    - DEPENDENCIES=--prefer-lowest
+
+install:
+    composer update --no-interaction --prefer-stable --prefer-dist $DEPENDENCIES
+
+script: make test
+
+stages:
+    - Validate composer.json
+    - Code Quality
+    - Test
+
+jobs:
+    allow_failures:
+        -   php: 7.4snapshot
+        -   php: nightly
+
+    include:
+        -   stage: Validate composer.json
+            name: Validate composer.json
+            php: 7.2
+            script:
+                - make validate-composer
+                - curl -O https://github.com/maglnet/ComposerRequireChecker/releases/latest/download/composer-require-checker.phar
+                - php composer-require-checker.phar check composer.json
+        -   stage: Code Quality
+            name: Lint
+            php: 7.2
+            script: make lint
+        -   name: Coding Standard
+            php: 7.2
+            script: make cs
+        -   name: PHPStan
+            php: 7.2
+            script: make phpstan

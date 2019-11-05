@@ -1,0 +1,16 @@
+{
+    "offsets": [
+        {
+            "partition": 0,
+            "offset": 8,
+            "error_code": null,
+            "error": null
+        },
+        {
+            "error_code": 1,
+            "error": "some unexpected error"
+        }
+    ],
+    "key_schema_id": null,
+    "value_schema_id": null
+}
