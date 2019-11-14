@@ -72,6 +72,67 @@ final class ConsumerTest extends TestCase
     }
 
     /**
+     * @dataProvider providerConsume
+     */
+    public function testConsumeWithIdleCallback(?int $timeout, ?int $maxBytes) : void
+    {
+        $consumerVO = new \Grongor\KafkaRest\Api\Value\Response\Consumer();
+
+        $firstMessages = [];
+        $secondMessages = [new Message(), new Message()];
+        $thirdMessages = [];
+
+        $client = Mockery::mock(RestClient::class);
+        $client->shouldReceive('getConsumerMessages')
+            ->once()
+            ->with($consumerVO, $timeout, $maxBytes)
+            ->andReturns($firstMessages);
+        $client->shouldReceive('getConsumerMessages')
+            ->once()
+            ->with($consumerVO, $timeout, $maxBytes)
+            ->andReturns($secondMessages);
+        $client->shouldReceive('getConsumerMessages')
+            ->once()
+            ->with($consumerVO, $timeout, $maxBytes)
+            ->andReturns($thirdMessages);
+        $client->shouldReceive('getConsumerMessages')
+            ->once()
+            ->andThrow(new Exception('some exception'));
+
+        $client->shouldReceive('deleteConsumer')
+            ->once()
+            ->with($consumerVO);
+
+        $callbackCalledTimes = 0;
+
+        $consumer = new Consumer($client, $consumerVO);
+        $consumer->setIdleCallback(static function () use (&$callbackCalledTimes) : void {
+            $callbackCalledTimes++;
+        });
+        $messages = $consumer->consume($timeout, $maxBytes);
+
+        self::assertInstanceOf(Generator::class, $messages);
+
+        self::assertTrue($messages->valid());
+        self::assertSame($secondMessages[0], $messages->current());
+
+        $messages->next();
+        self::assertTrue($messages->valid());
+        self::assertSame($secondMessages[1], $messages->current());
+
+        self::assertTrue($messages->valid());
+
+        try {
+            $messages->next();
+            self::fail('Expected an exception');
+        } catch (ConsumerClosed $exception) {
+            self::assertFalse($messages->valid());
+        }
+
+        self::assertSame(2, $callbackCalledTimes);
+    }
+
+    /**
      * @return iterable<array<mixed>>
      */
     public function providerConsume() : iterable
