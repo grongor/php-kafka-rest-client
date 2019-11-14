@@ -86,6 +86,20 @@ final class BatchConsumer
                     $this->getTimeout($batchTimeout),
                     $maxBytes
                 );
+
+                if (count($messages) === 0) {
+                    if ($this->maxDuration === null || $this->clock->now() < $batchTimeout) {
+                        continue;
+                    }
+
+                    yield $batch;
+
+                    $batch = new MessagesBatch();
+                    $batchTimeout = $this->getBatchTimeout();
+
+                    continue;
+                }
+
                 foreach ($messages as $message) {
                     $batch->add($message);
 

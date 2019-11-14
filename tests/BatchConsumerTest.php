@@ -40,7 +40,8 @@ final class BatchConsumerTest extends TestCase
         $firstMessages = [new Message(), new Message()];
         $secondMessages = [new Message()];
         $thirdMessages = [];
-        $forthMessages = [new Message()];
+        $fourthMessages = [];
+        $fifthMessages = [new Message()];
 
         $client = Mockery::mock(RestClient::class);
         $client->shouldReceive('getConsumerMessages')
@@ -73,11 +74,20 @@ final class BatchConsumerTest extends TestCase
         $client->shouldReceive('getConsumerMessages')
             ->once()
             ->with($consumerVO, $maxDuration - 15, $maxBytes)
-            ->andReturnUsing(static function () use (&$now, $clock, $forthMessages) {
+            ->andReturnUsing(static function () use (&$now, $clock, $fourthMessages) {
+                $now = $now->add(new DateInterval('PT20S'));
+                $clock->setTo($now);
+
+                return $fourthMessages;
+            });
+        $client->shouldReceive('getConsumerMessages')
+            ->once()
+            ->with($consumerVO, $maxDuration, $maxBytes)
+            ->andReturnUsing(static function () use (&$now, $clock, $fifthMessages) {
                 $now = $now->add(new DateInterval('PT10S'));
                 $clock->setTo($now);
 
-                return $forthMessages;
+                return $fifthMessages;
             });
         $client->shouldReceive('getConsumerMessages')
             ->once()
@@ -101,6 +111,13 @@ final class BatchConsumerTest extends TestCase
         self::assertCount(3, $batch->getMessages());
         self::assertSame(array_merge($firstMessages, $secondMessages), $batch->getMessages());
 
+        $messages->next();
+        self::assertTrue($messages->valid());
+        $batch = $messages->current();
+        self::assertInstanceOf(MessagesBatch::class, $batch);
+        self::assertSame(0, $batch->count());
+        self::assertCount(0, $batch->getMessages());
+
         try {
             $messages->next();
             self::fail('Expected an exception');
@@ -121,7 +138,7 @@ final class BatchConsumerTest extends TestCase
         $firstMessages = [new Message(), new Message()];
         $secondMessages = [new Message()];
         $thirdMessages = [];
-        $forthMessages = [new Message()];
+        $fourthMessages = [new Message()];
 
         $client = Mockery::mock(RestClient::class);
         $client->shouldReceive('getConsumerMessages')
@@ -139,7 +156,7 @@ final class BatchConsumerTest extends TestCase
         $client->shouldReceive('getConsumerMessages')
             ->once()
             ->with($consumerVO, 10, $maxBytes)
-            ->andReturn($forthMessages);
+            ->andReturn($fourthMessages);
         $client->shouldReceive('getConsumerMessages')
             ->once()
             ->with($consumerVO, 10, $maxBytes)
@@ -184,7 +201,7 @@ final class BatchConsumerTest extends TestCase
         $firstMessages = [new Message(), new Message()];
         $secondMessages = [new Message()];
         $thirdMessages = [new Message()];
-        $forthMessages = [new Message()];
+        $fourthMessages = [new Message()];
 
         $client = Mockery::mock(RestClient::class);
         $client->shouldReceive('getConsumerMessages')
@@ -217,11 +234,11 @@ final class BatchConsumerTest extends TestCase
         $client->shouldReceive('getConsumerMessages')
             ->once()
             ->with($consumerVO, $maxDuration, $maxBytes)
-            ->andReturnUsing(static function () use (&$now, $clock, $forthMessages) {
+            ->andReturnUsing(static function () use (&$now, $clock, $fourthMessages) {
                 $now = $now->add(new DateInterval('PT10S'));
                 $clock->setTo($now);
 
-                return $forthMessages;
+                return $fourthMessages;
             });
         $client->shouldReceive('getConsumerMessages')
             ->once()
