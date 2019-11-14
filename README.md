@@ -67,6 +67,10 @@ messages. Simply pass it a message you wish to commit. For most cases it's recom
 and manually commit each message, so that you don't ever "lose" a message if your application dies
 in the middle of the processing.
 
+You can also (optionally) set an idle callback using `setIdleCallback` method. This callback will be called whenever
+there are no messages to yield. The idle interval is then equal to the `timeout` parameter if provided, or to the
+`consumerRequestTimeoutMs` option if set, otherwise to the proxy configuration option `consumer.request.timeout.ms`.
+
 ```php
 $consumerFactory = new ConsumerFactory($restClient);
 $consumer = $consumerFactory->create('your-consumer-group', Subscription::topic('your-topic'));

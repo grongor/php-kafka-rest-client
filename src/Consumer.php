@@ -9,6 +9,7 @@ use Grongor\KafkaRest\Api\Value\Request\Offset;
 use Grongor\KafkaRest\Api\Value\Response\Message;
 use Grongor\KafkaRest\Exception\ConsumerClosed;
 use Throwable;
+use function count;
 
 final class Consumer
 {
@@ -17,6 +18,9 @@ final class Consumer
 
     /** @var Api\Value\Response\Consumer */
     private $consumer;
+
+    /** @var callable|null */
+    private $idleCallback;
 
     public function __construct(RestClient $client, Api\Value\Response\Consumer $consumer)
     {
@@ -33,6 +37,11 @@ final class Consumer
         $this->close();
     }
 
+    public function setIdleCallback(callable $idleCallback) : void
+    {
+        $this->idleCallback = $idleCallback;
+    }
+
     /**
      * @return Message[]
      */
@@ -44,7 +53,14 @@ final class Consumer
 
         try {
             while (true) {
-                yield from $this->client->getConsumerMessages($this->consumer, $timeout, $maxBytes);
+                $messages = $this->client->getConsumerMessages($this->consumer, $timeout, $maxBytes);
+                if ($this->idleCallback !== null && count($messages) === 0) {
+                    ($this->idleCallback)();
+
+                    continue;
+                }
+
+                yield from $messages;
             }
         } catch (Throwable $throwable) {
             $this->close();
