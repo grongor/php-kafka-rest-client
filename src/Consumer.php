@@ -48,12 +48,17 @@ final class Consumer
     public function consume(?int $timeout = null, ?int $maxBytes = null) : iterable
     {
         if (! isset($this->consumer)) {
-            throw ConsumerClosed::new();
+            throw ConsumerClosed::consume();
         }
 
         try {
             while (true) {
                 $messages = $this->client->getConsumerMessages($this->consumer, $timeout, $maxBytes);
+
+                if (! isset($this->consumer)) {
+                    break;
+                }
+
                 if ($this->idleCallback !== null && count($messages) === 0) {
                     ($this->idleCallback)();
 
@@ -77,8 +82,12 @@ final class Consumer
         );
     }
 
-    private function close() : void
+    public function close() : void
     {
+        if (! isset($this->consumer)) {
+            throw ConsumerClosed::close();
+        }
+
         $this->client->deleteConsumer($this->consumer);
         unset($this->consumer);
     }

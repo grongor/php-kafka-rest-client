@@ -14,7 +14,12 @@ final class ConsumerClosed extends RuntimeException
         return new self('Failed to consume messages; consumer is now closed', 0, $previous);
     }
 
-    public static function new() : self
+    public static function close() : self
+    {
+        return new self('Cannot close a closed consumer');
+    }
+
+    public static function consume() : self
     {
         return new self('Consumer is closed');
     }

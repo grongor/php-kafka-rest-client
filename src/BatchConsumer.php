@@ -73,7 +73,7 @@ final class BatchConsumer
     public function consume(?int $maxBytes = null) : iterable
     {
         if (! isset($this->consumer)) {
-            throw ConsumerClosed::new();
+            throw ConsumerClosed::consume();
         }
 
         $batch = new MessagesBatch();
@@ -86,6 +86,11 @@ final class BatchConsumer
                     $this->getTimeout($batchTimeout),
                     $maxBytes
                 );
+
+                if (! isset($this->consumer)) {
+                    break;
+                }
+
 
                 if (count($messages) === 0) {
                     if ($this->maxDuration === null || $this->clock->now() < $batchTimeout) {
@@ -143,6 +148,16 @@ final class BatchConsumer
         $this->client->consumerCommitOffsets($this->consumer, $offsets);
     }
 
+    public function close() : void
+    {
+        if (! isset($this->consumer)) {
+            throw ConsumerClosed::close();
+        }
+
+        $this->client->deleteConsumer($this->consumer);
+        unset($this->consumer);
+    }
+
     private function getBatchTimeout() : ?DateTimeImmutable
     {
         if ($this->maxDuration !== null) {
@@ -159,11 +174,5 @@ final class BatchConsumer
         }
 
         return $batchTimeout->getTimestamp() - $this->clock->now()->getTimestamp();
-    }
-
-    private function close() : void
-    {
-        $this->client->deleteConsumer($this->consumer);
-        unset($this->consumer);
     }
 }
