@@ -41,12 +41,6 @@ final class Message
     public $offset;
 
     /**
-     * @Serializer\Type("int")
-     * @var int
-     */
-    public $timestamp;
-
-    /**
      * @internal
      *
      * @Serializer\PostDeserialize()
