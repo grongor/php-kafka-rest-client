@@ -9,6 +9,7 @@ use Grongor\KafkaRest\Api\Value\Request\Message;
 use Grongor\KafkaRest\Exception\FailedToProduceMessages;
 use function array_key_exists;
 use function count;
+use function iterable_to_array;
 
 final class Producer
 {
@@ -30,6 +31,11 @@ final class Producer
      */
     public function produceBatch(string $topic, iterable $messages) : void
     {
+        $messages = iterable_to_array($messages, false);
+        if (count($messages) === 0) {
+            return;
+        }
+
         $errors = [];
         foreach ($this->client->produce($topic, $messages) as $i => $result) {
             if (! $result->isError()) {

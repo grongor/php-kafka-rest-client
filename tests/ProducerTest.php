@@ -29,6 +29,7 @@ final class ProducerTest extends TestCase
 
         $producer = new Producer($client);
         $producer->produce('some-topic', $message);
+
         self::assertThat(true, new IsTrue());
     }
 
@@ -146,5 +147,8 @@ final class ProducerTest extends TestCase
                 $exception->retryable
             );
         }
+
+        // no request should be made if there are no messages to produce
+        $producer->produceBatch('some-topic', []);
     }
 }
