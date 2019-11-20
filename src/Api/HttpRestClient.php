@@ -75,70 +75,52 @@ final class HttpRestClient implements RestClient
     /** {@inheritDoc} */
     public function listTopics() : array
     {
-        /** @var array<string> $topics */
-        $topics = $this->execute($this->get('/topics'), 'array<string>');
-
-        return $topics;
+        return $this->execute($this->get('/topics'), 'array<string>');
     }
 
     /** {@inheritDoc} */
     public function getTopic(string $topic) : Topic
     {
-        /** @var Topic $result */
-        $result = $this->execute($this->get(sprintf('/topics/%s', $topic)), Topic::class);
-
-        return $result;
+        return $this->execute($this->get(sprintf('/topics/%s', $topic)), Topic::class);
     }
 
     /** {@inheritDoc} */
     public function produce(string $topic, iterable $messages) : array
     {
-        /** @var ProduceResults $result */
-        $result = $this->execute(
+        return $this->execute(
             $this->post(sprintf('/topics/%s', $topic), $this->serialize(['records' => $messages])),
             ProduceResults::class
-        );
-
-        return $result->results;
+        )->results;
     }
 
     /** {@inheritDoc} */
     public function listPartitions(string $topic) : array
     {
-        /** @var Partition[] $partitions */
-        $partitions = $this->execute(
+        return $this->execute(
             $this->get(sprintf('/topics/%s/partitions', $topic)),
             sprintf('array<%s>', Partition::class)
         );
-
-        return $partitions;
     }
 
     /** {@inheritDoc} */
     public function getPartition(string $topic, int $partition) : Partition
     {
-        /** @var Partition $result */
-        $result = $this->execute(
+        return $this->execute(
             $this->get(sprintf('/topics/%s/partitions/%d', $topic, $partition)),
             Partition::class
         );
-
-        return $result;
     }
 
     /** {@inheritDoc} */
     public function produceToPartition(string $topic, int $partition, iterable $messages) : array
     {
-        /** @var ProduceResults $result */
-        $result = $this->execute(
+        return $this->execute(
             $this->post(
                 sprintf('/topics/%s/partitions/%d', $topic, $partition),
                 $this->serialize(['records' => $messages])
             ),
             ProduceResults::class
-        );
-
-        return $result->results;
+        )->results;
     }
 
     /** {@inheritDoc} */
@@ -146,7 +128,6 @@ final class HttpRestClient implements RestClient
     {
         $consumerOptions = $consumerOptions ?? new ConsumerOptions();
 
-        /** @var Consumer $consumer */
         $consumer = $this->execute(
             $this->post(sprintf('/consumers/%s', $group), $this->serialize($consumerOptions)),
             Consumer::class
@@ -180,13 +161,10 @@ final class HttpRestClient implements RestClient
     /** {@inheritDoc} */
     public function getConsumerCommittedOffsets(Consumer $consumer, iterable $partitions) : array
     {
-        /** @var array<string, array<Offset>> $result */
-        $result = $this->execute(
+        return $this->execute(
             $this->consumerGet($consumer, '/offsets', $this->serialize(['partitions' => $partitions])),
             sprintf('array<string, array<%s>>', Offset::class)
-        );
-
-        return $result['offsets'];
+        )['offsets'];
     }
 
     /** {@inheritDoc} */
@@ -198,10 +176,7 @@ final class HttpRestClient implements RestClient
     /** {@inheritDoc} */
     public function getConsumerSubscribedTopics(Consumer $consumer) : array
     {
-        /** @var array<string, array<string>> $result */
-        $result = $this->execute($this->consumerGet($consumer, '/subscription'), 'array<string, array<string>>');
-
-        return $result['topics'];
+        return $this->execute($this->consumerGet($consumer, '/subscription'), 'array<string, array<string>>')['topics'];
     }
 
     /** {@inheritDoc} */
@@ -219,13 +194,10 @@ final class HttpRestClient implements RestClient
     /** {@inheritDoc} */
     public function getConsumerAssignedPartitions(Consumer $consumer) : array
     {
-        /** @var array<string, array<AssignedPartition>> $result */
-        $result = $this->execute(
+        return $this->execute(
             $this->consumerGet($consumer, '/assignments'),
             sprintf('array<string, array<%s>>', AssignedPartition::class)
-        );
-
-        return $result['partitions'];
+        )['partitions'];
     }
 
     /** {@inheritDoc} */
@@ -265,19 +237,13 @@ final class HttpRestClient implements RestClient
         $request = $this->consumerGet($consumer, '/records');
         $request = $request->withUri($request->getUri()->withQuery(http_build_query($parameters)), true);
 
-        /** @var array<Message> $messages */
-        $messages = $this->execute($request, sprintf('array<%s>', Message::class));
-
-        return $messages;
+        return $this->execute($request, sprintf('array<%s>', Message::class));
     }
 
     /** {@inheritDoc} */
     public function getBrokers() : array
     {
-        /** @var array<string, array<int>> $result */
-        $result = $this->execute($this->get('/brokers'), 'array<string, array<int>>');
-
-        return $result['brokers'];
+        return $this->execute($this->get('/brokers'), 'array<string, array<int>>')['brokers'];
     }
 
     private function request(string $method, string $path, ?UriInterface $baseUri = null) : RequestInterface
