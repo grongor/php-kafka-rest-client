@@ -231,7 +231,7 @@ final class HttpRestClient implements RestClient
         }
 
         if ($maxBytes !== null) {
-            $parameters['maxBytes'] = $maxBytes;
+            $parameters['max_bytes'] = $maxBytes;
         }
 
         $request = $this->consumerGet($consumer, '/records');
