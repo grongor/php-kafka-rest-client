@@ -469,6 +469,33 @@ final class HttpRestClientTest extends TestCase
         self::assertSame('msg2', $messages[1]->content);
         self::assertSame(1, $messages[1]->partition);
         self::assertSame(53, $messages[1]->offset);
+
+        $this->expectRequest(
+            'GET',
+            '/consumers/dolor-sit-amet/instances/custom-consumer-name/records?timeout=10',
+            null,
+            $this->fileResponse('getConsumerMessages')
+        );
+
+        $this->client->getConsumerMessages($consumer, 10);
+
+        $this->expectRequest(
+            'GET',
+            '/consumers/dolor-sit-amet/instances/custom-consumer-name/records?max_bytes=1000',
+            null,
+            $this->fileResponse('getConsumerMessages')
+        );
+
+        $this->client->getConsumerMessages($consumer, null, 1000);
+
+        $this->expectRequest(
+            'GET',
+            '/consumers/dolor-sit-amet/instances/custom-consumer-name/records?timeout=10&max_bytes=1000',
+            null,
+            $this->fileResponse('getConsumerMessages')
+        );
+
+        $this->client->getConsumerMessages($consumer, 10, 1000);
     }
 
     public function testGetBrokers() : void
