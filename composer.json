@@ -18,7 +18,7 @@
         "psr/http-message": "^1.0.1",
         "psr/log": "^1.1",
         "teapot/status-code": "^1.1",
-        "thecodingmachine/safe": "^0.1.16"
+        "thecodingmachine/safe": "^1.0.2"
     },
     "require-dev": {
         "cdn77/coding-standard": "^2.0",
@@ -35,8 +35,8 @@
         "phpstan/phpstan-strict-rules": "^0.11.1",
         "phpunit/phpunit": "^8.0",
         "roave/security-advisories": "dev-master",
-        "slevomat/coding-standard": "dev-master as 5.0.4",
-        "thecodingmachine/phpstan-safe-rule": "^0.1.4"
+        "slevomat/coding-standard": "dev-master#b5a3bac as 5.0.4",
+        "thecodingmachine/phpstan-safe-rule": "^1.0"
     },
     "conflict": {
         "doctrine/annotations": "<1.7.0"

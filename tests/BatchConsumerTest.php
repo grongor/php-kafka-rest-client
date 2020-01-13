@@ -6,7 +6,6 @@ namespace Grongor\KafkaRest\Tests;
 
 use Assert\AssertionFailedException;
 use DateInterval;
-use DateTimeImmutable;
 use Exception;
 use Generator;
 use Grongor\KafkaRest\Api\RestClient;
@@ -22,6 +21,7 @@ use Mockery;
 use PHPUnit\Framework\Constraint\IsTrue;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
+use Safe\DateTimeImmutable;
 use function array_merge;
 
 final class BatchConsumerTest extends TestCase
