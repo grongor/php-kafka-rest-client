@@ -49,7 +49,7 @@ phpstan: vendor
 
 .PHONY: validate-composer
 validate-composer:
-	composer validate --strict
+	composer validate
 
 .PHONY: check
 check: build validate-composer lint cs phpstan test
