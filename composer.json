@@ -21,7 +21,7 @@
         "thecodingmachine/safe": "^0.1.16"
     },
     "require-dev": {
-        "cdn77/coding-standard": "^2.0",
+        "cdn77/coding-standard": "^6.0",
         "guzzlehttp/psr7": "^1.6",
         "http-interop/http-factory-guzzle": "^1.0",
         "jakub-onderka/php-parallel-lint": "^1.0.0",
