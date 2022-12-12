@@ -10,7 +10,7 @@
     "require": {
         "php": "^7.2|^8.0",
         "beberlei/assert": "^3.2",
-        "bentools/iterable-functions": "^1.2",
+        "bentools/iterable-functions": "^2.0",
         "jms/serializer": "^3.2",
         "lcobucci/clock": "^1.2",
         "psr/http-client": "^1.0",
