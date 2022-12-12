@@ -28,15 +28,15 @@
         "mockery/mockery": "^1.2.3",
         "php-http/message": "^1.0",
         "phpstan/extension-installer": "^1.0",
-        "phpstan/phpstan": "^0.11.19",
-        "phpstan/phpstan-beberlei-assert": "^0.11.2",
-        "phpstan/phpstan-mockery": "^0.11.3",
-        "phpstan/phpstan-phpunit": "^0.11.2",
-        "phpstan/phpstan-strict-rules": "^0.11.1",
+        "phpstan/phpstan": "^1.0.0",
+        "phpstan/phpstan-beberlei-assert": "^1.0.0",
+        "phpstan/phpstan-mockery": "^1.0.0",
+        "phpstan/phpstan-phpunit": "^1.0.0",
+        "phpstan/phpstan-strict-rules": "^1.0.0",
         "phpunit/phpunit": "^8.0",
         "roave/security-advisories": "dev-master",
         "slevomat/coding-standard": "dev-master as 5.0.4",
-        "thecodingmachine/phpstan-safe-rule": "^0.1.4"
+        "thecodingmachine/phpstan-safe-rule": "^1.0.0"
     },
     "conflict": {
         "doctrine/annotations": "<1.7.0"
