@@ -15,7 +15,7 @@
         "lcobucci/clock": "^3.0",
         "psr/http-client": "^1.0",
         "psr/http-factory": "^1.0",
-        "psr/http-message": "^1.0.1",
+        "psr/http-message": "^2.0.0",
         "psr/log": "^3.0",
         "teapot/status-code": "^2.0",
         "thecodingmachine/safe": "^2.0.0"
