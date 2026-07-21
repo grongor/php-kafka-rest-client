@@ -22,7 +22,7 @@
     },
     "require-dev": {
         "cdn77/coding-standard": "^7.0",
-        "guzzlehttp/psr7": "^2.0",
+        "guzzlehttp/psr7": "^3.0",
         "http-interop/http-factory-guzzle": "^1.0",
         "jakub-onderka/php-parallel-lint": "^1.0.0",
         "mockery/mockery": "^1.2.3",
